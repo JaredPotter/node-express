@@ -4,9 +4,12 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const app = express();
-app.use(bodyParser.json());
+app.use(bodyParser.json()); // Allows us to read json
 
+// Mock Database - State
 const fruits = ["banana"];
+
+// API ENDPOINTS
 
 app.get("/api/fruits", function (req, res) {
   res.send(fruits);
@@ -43,11 +46,9 @@ app.post("/api/fruits", function (req, res) {
 app.delete("/api/fruits/:id", function (req, res) {
   const fruitId = req.params.id;
 
-  const index = fruits.indexOf((f) => {
-    return f === fruitId;
-  });
+  const index = fruits.indexOf(fruitId);
 
-  if (index) {
+  if (index !== -1) {
     fruits.splice(index, 1);
     res.send();
   } else {
@@ -58,24 +59,23 @@ app.delete("/api/fruits/:id", function (req, res) {
 app.put("/api/fruits/:id", function (req, res) {
   const fruitId = req.params.id;
 
-  const index = fruits.indexOf((f) => {
-    return f === fruitId;
-  });
+  const index = fruits.indexOf(fruitId);
 
-  if (index) {
+  if (index !== -1) {
     const fruit = req.body;
 
     if (fruit && fruit.name) {
       fruits.splice(index, 1, fruit.name);
       res.send();
     } else {
-      res.send("NOT FOUND!");
+      res.send("BAD REQUEST");
     }
   } else {
     res.send("NOT FOUND!");
   }
 });
 
+// Start your server
 app.listen(3000, () => {
   console.log("Server Started");
 });
